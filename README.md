@@ -32,7 +32,7 @@ app.listen(PORT, () => {
 tail -f server.log
 ```
 
-## Winston
+## Morgan
 
 ### Till consoll
 
@@ -63,4 +63,56 @@ const app = express();
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 app.use(morgan('combined', { stream: accessLogStream }));
+```
+
+## Winston
+
+### logger.js
+
+```js
+const winston = require('winston');
+require('dotenv').config();
+
+const logLevel = process.env.LOG_LEVEL || 'info';
+
+const logger = winston.createLogger({
+  level: logLevel,
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'application.log' })
+  ]
+});
+
+module.exports = logger;
+```
+
+```js
+require('dotenv').config();
+const express = require('express');
+const logger = require('./logger');
+
+const app = express();
+
+logger.info('Express application is starting up...');
+app.use('/api/user', require('./routes/user_routes.js'));
+
+app.get('/api/test', (req, res) => {
+  logger.info('Test route accessed');
+  res.send('Logging is working!');
+});
+
+module.exports = app;
+```
+
+### Log levels in Winston
+
+```js
+logger.debug('This is a debug message');    // Detailed, low-level info for development
+logger.info('User logged in successfully'); // General information about application events
+logger.warn('Memory usage is high');        // Potential issue to keep an eye on
+logger.error('Failed to connect to database'); // Serious issue that requires attention
 ```
