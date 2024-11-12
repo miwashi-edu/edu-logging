@@ -1,13 +1,10 @@
 const express = require('express');
 const cors = require('cors')
-var favicon = require('serve-favicon');
-var path = require('path');
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
 
 const app = express();
-app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')));
 app.use(cors());
 app.use(express.static('public'));
 
