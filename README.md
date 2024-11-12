@@ -18,9 +18,16 @@ console.log = function(message) {
 };
 ```
 
+### Använd loggen
+
+```js
+app.listen(PORT, () => {
+    console.log(`HTTP server listening on port ${PORT}`);
+});
+```
+
 ### Taila loggen
 
 ```bash
 tail -f server.log
 ```
-
